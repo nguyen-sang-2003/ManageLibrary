@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Share/_Layout.cshtml";
+}
+
+@section contenheader {
+    <li class="nav-item">
+        <a class="nav-link" href="/home/index">Sản Phẩm</a>
+
+    </li>
+    <li>
+        <a class="nav-link" href="/home/borrowing">Sách Đã Mượn</a>
+    </li>
+}
+
+<div class="container-fluid">
+    <h2>Danh sách sản phẩm</h2>
+    <div class="row">
+
+        <p class="text-primary">@TempData["message"]</p>
+        
+        <form method="post" action="/home/index" class="d-flex">
+            <input type="text" name="title" class="me-2" placeholder="Search by title...">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <form method="post" action="/home/borrow">
+            <button type="submit" class="btn btn-success" style="float:right">Mượn</button>
+            <table class="table table-bordered mt-5">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Subtitle</th>
+                        <th>Quantity</th>
+                        <th>Action</th>
+                        <th>Borrow</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var book in ViewBag.Book)
+                    {
+                        <tr>
+                            <td>@book.Id</td>
+                            <td><img src="@book.Image" class="img-fluid" style="max-width: 50px;" /></td>
+                            <td>@book.Title</td>
+                            <td>@book.Subtitle</td>
+                            <td>@book.QuantityInStock</td>
+                            <td>
+                                <a class="btn btn-primary" href="/home/detailbook/@book.Id">chi tiết</a>
+                            </td>
+                            <td>
+                                <div class="form-check form-check-inline ml-2">
+                                    <input class="form-check-input" type="checkbox" name="selectedBooks" value="@book.Id">chọn
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>

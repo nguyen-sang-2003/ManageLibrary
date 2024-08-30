@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewData["Title"] = "DetailBook";
+    Layout = "~/Views/Share/_Layout.cshtml";
+}
+
+@section contenheader {
+    <li class="nav-item">
+        <a class="nav-link" href="/home/index">Sản Phẩm</a>
+
+    </li>
+    <li>
+        <a class="nav-link" href="/home/borrowing">Sách Đã Mượn</a>
+    </li>
+}
+
+<h2>chi tiết sản phẩm</h2>
+
+<table class="table">
+    <tr>
+        <th>Id</th>
+        <td>@ViewBag.BookDetail.Id</td>
+    </tr>
+    <tr>
+        <th>Image</th>
+        <td><img src="@ViewBag.BookDetail.Image" style="max-width: 70px;"/></td>
+    </tr>
+    <tr>
+        <th>Title</th>
+        <td>@ViewBag.BookDetail.Title</td>
+    </tr>
+    <tr>
+        <th>subtitle</th>
+        <td>@ViewBag.BookDetail.Subtitle</td>
+    </tr>
+    <tr>
+        <th>description</th>
+        <td>@ViewBag.BookDetail.Description</td>
+    </tr>
+    <tr>
+        <th>author</th>
+        <td>@ViewBag.BookDetail.AuthorId</td>
+    </tr>
+    <tr>
+        <th>genre</th>
+        <td>@ViewBag.BookDetail.GenreId</td>
+    </tr>
+    <tr>
+        <th>quantity</th>
+        <td>@ViewBag.BookDetail.QuantityInStock</td>
+    </tr>
+    <tr>
+        <th>publishing year</th>
+        <td>@ViewBag.BookDetail.PublishingYear</td>
+    </tr>
+</table>
+

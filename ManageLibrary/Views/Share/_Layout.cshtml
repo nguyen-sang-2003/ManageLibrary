@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm bg-success navbar-dark">
+        <a class="navbar-brand" href="#"></a>
+        <ul class="navbar-nav">
+            @RenderSection("contenheader",required:false)
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li>
+                @if (Context.Session.GetInt32("UserId") != null || Context.Session.GetInt32("AdminId") != null)
+                {
+                    <a class="nav-link" href="/account/logout">LogOut</a>
+                }
+                else
+                {
+                    <a class="nav-link" href="/account/login">Login</a>
+                }
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container-fluid">
+        @RenderBody()
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

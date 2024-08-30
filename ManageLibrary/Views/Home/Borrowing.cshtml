@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewData["Title"] = "Borrowing";
+    Layout = "~/Views/Share/_Layout.cshtml";
+}
+
+@section contenheader {
+    <li class="nav-item">
+        <a class="nav-link" href="/home/index">Sản Phẩm</a>
+    </li>
+    <li>
+        <a class="nav-link" href="/home/borrowing">Sách Đã Mượn</a>
+    </li>
+}
+
+<div class="container-fluid">
+    <h2>Danh sách mượn</h2>
+    <div class="row">
+
+        <p class="text-primary">@ViewBag.message</p>
+
+            <table class="table table-bordered mt-5">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Book</th>
+                        <th>Start</th>
+                        <th>end</th>
+                        <th>actual end</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.ListItems != null)
+                    {
+                        @foreach (var item in ViewBag.ListItems)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>
+                                    @foreach (var borrowItem in item.BorrowingItems)
+                                    {
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div>
+                                                @* <img src="@borrowItem.Book.Image" style="max-width: 50px;" /> *@
+                                            </div>
+                                            <div class="ms-2">
+                                                <p class="mb-0">@borrowItem.Book.Title</p>
+                                            </div>
+                                        </div>
+                                    }
+                                </td>
+
+                                <td>@item.StartAt.ToString("yyyy-MM-dd")</td>
+                                <td>@item.EndAt.ToString("yyyy-MM-dd")</td>
+                                <td>@item.ActualEndAt.ToString("yyyy-MM-dd")</td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                        <td colspan="5" class="text-center text-danger"><p>No borrowing records found.</p></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+    </div>
+</div>
+
+
