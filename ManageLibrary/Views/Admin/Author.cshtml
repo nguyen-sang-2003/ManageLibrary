@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewData["Title"] = "Author";
+    Layout = "~/Views/Share/_Layout2.cshtml";
+}
+
+<h1>Author</h1>
+
+<div class="container mt-5">
+    <form action="/admin/AddAuthor" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="Name" required />
+        <button type="submit" class="btn btn-primary">Add New Author</button>
+    </form>
+</div>
+
+<h3 class="text-info">@TempData["message"]</h3>
+
+<table class="table table-bordered mt-5">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Author Name</th>
+            <th>List Book Name</th>
+            <th>delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var author in ViewBag.author)
+        {
+            <tr>
+                <td>@author.Id</td>
+                <td>@author.Name</td>
+                <td>
+                    <ul>
+                        @if (author.Books == null || author.Books.Count == 0){
+                            <p class="text-danger">no book</p>
+                        }
+                        else
+                        {
+                            @foreach (var a in author.Books)
+                            {
+                                <li>@a.Title</li>
+                            }
+                        }
+                    </ul>
+                </td>
+                <td><a href="/admin/DeleteAuthor/@author.Id" class="btn btn-danger">delete</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+

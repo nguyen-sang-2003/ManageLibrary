@@ -41,7 +41,7 @@
                                     {
                                         <div class="d-flex align-items-center mb-2">
                                             <div>
-                                                @* <img src="@borrowItem.Book.Image" style="max-width: 50px;" /> *@
+                                                <img src="@borrowItem.Book.Image" style="max-width: 40px;" />
                                             </div>
                                             <div class="ms-2">
                                                 <p class="mb-0">@borrowItem.Book.Title</p>
@@ -50,9 +50,12 @@
                                     }
                                 </td>
 
-                                <td>@item.StartAt.ToString("yyyy-MM-dd")</td>
-                                <td>@item.EndAt.ToString("yyyy-MM-dd")</td>
-                                <td>@item.ActualEndAt.ToString("yyyy-MM-dd")</td>
+                            <td>@item.StartAt.ToString("dd-MM-yyyy")</td>
+                            <td>@item.EndAt.ToString("dd-MM-yyyy")</td>
+                            @* <td>@item.ActualEndAt.ToString("dd-MM-yyyy")</td> *@
+                            <td>@(item.ActualEndAt != null ? item.ActualEndAt.ToString("dd-MM-yyyy") : "null")</td>
+
+
 
                             </tr>
                         }

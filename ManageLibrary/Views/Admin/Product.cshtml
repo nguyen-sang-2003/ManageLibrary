@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewData["Title"] = "Product";
+    Layout = "~/Views/Share/_Layout2.cshtml";
+}
+
+<h1>Product</h1>
+<a href="/admin/AddProduct" class="btn btn-success" style="float:right">Add New Product</a>
+
+<table class="table table-bordered mt-5">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Subtitle</th>
+            <th>Quantity</th>
+            <th>Publish Year</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in ViewBag.Book)
+        {
+            <tr>
+                <td>@book.Id</td>
+                <td><img src="@book.Image" class="img-fluid" style="max-width: 60px;" /></td>
+                <td>@book.Title</td>
+                <td>@book.Subtitle</td>
+                <td>@book.QuantityInStock</td>
+                <td>@book.PublishingYear</td>
+                <td>
+                    <a class="btn btn-primary" href="/admin/DetailBook/@book.Id">chi tiết</a>
+                    <a class="btn btn-danger" href="/admin/DeleteBook/@book.Id">xóa</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

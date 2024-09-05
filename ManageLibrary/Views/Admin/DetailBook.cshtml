@@ -1,21 +1,10 @@
 ﻿
 @{
     ViewData["Title"] = "DetailBook";
-    Layout = "~/Views/Share/_Layout.cshtml";
+    Layout = "~/Views/Share/_Layout2.cshtml";
 }
 
-@section contenheader {
-    <li class="nav-item">
-        <a class="nav-link" href="/home/index">Sản Phẩm</a>
-
-    </li>
-    <li>
-        <a class="nav-link" href="/home/borrowing">Sách Đã Mượn</a>
-    </li>
-}
-
-<h2>chi tiết sản phẩm</h2>
-
+<h1>DetailBook</h1>
 <table class="table">
     <tr>
         <th>Id</th>
@@ -23,7 +12,7 @@
     </tr>
     <tr>
         <th>Image</th>
-        <td><img src="@ViewBag.BookDetail.Image" style="max-width: 70px;"/></td>
+        <td><img src="@ViewBag.BookDetail.Image" style="max-width: 70px;" /></td>
     </tr>
     <tr>
         <th>Title</th>
@@ -53,6 +42,6 @@
         <th>publishing year</th>
         <td>@ViewBag.BookDetail.PublishingYear</td>
     </tr>
-</table>
-<a href="/home/index" class="btn btn-info custom-back-button">Back</a>
 
+</table>
+<a href="/admin/Product" class="btn btn-info custom-back-button">Back</a>

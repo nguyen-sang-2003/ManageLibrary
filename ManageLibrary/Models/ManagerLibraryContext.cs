@@ -45,7 +45,7 @@ public partial class ManagerLibraryContext : DbContext
     {
         modelBuilder.Entity<Admin>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__admins__3213E83F22616CD9");
+            entity.HasKey(e => e.Id).HasName("PK__admins__3213E83F5263EBC2");
 
             entity.ToTable("admins");
 
@@ -70,7 +70,7 @@ public partial class ManagerLibraryContext : DbContext
 
         modelBuilder.Entity<Author>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__authors__3213E83FF69FFE27");
+            entity.HasKey(e => e.Id).HasName("PK__authors__3213E83F8412C173");
 
             entity.ToTable("authors");
 
@@ -89,7 +89,7 @@ public partial class ManagerLibraryContext : DbContext
 
         modelBuilder.Entity<Book>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__books__3213E83FDEFCC080");
+            entity.HasKey(e => e.Id).HasName("PK__books__3213E83F3CACCA31");
 
             entity.ToTable("books");
 
@@ -120,16 +120,16 @@ public partial class ManagerLibraryContext : DbContext
 
             entity.HasOne(d => d.Author).WithMany(p => p.Books)
                 .HasForeignKey(d => d.AuthorId)
-                .HasConstraintName("FK__books__author_id__59FA5E80");
+                .HasConstraintName("FK__books__author_id__440B1D61");
 
             entity.HasOne(d => d.Genre).WithMany(p => p.Books)
                 .HasForeignKey(d => d.GenreId)
-                .HasConstraintName("FK__books__genre_id__5AEE82B9");
+                .HasConstraintName("FK__books__genre_id__44FF419A");
         });
 
         modelBuilder.Entity<Borrowing>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__borrowin__3213E83F1645D332");
+            entity.HasKey(e => e.Id).HasName("PK__borrowin__3213E83F6AC3644A");
 
             entity.ToTable("borrowings");
 
@@ -155,12 +155,12 @@ public partial class ManagerLibraryContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Borrowings)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__borrowing__user___5BE2A6F2");
+                .HasConstraintName("FK__borrowing__user___45F365D3");
         });
 
         modelBuilder.Entity<BorrowingItem>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__borrowin__3213E83F7837B11B");
+            entity.HasKey(e => e.Id).HasName("PK__borrowin__3213E83F62E12083");
 
             entity.ToTable("borrowing_items");
 
@@ -179,17 +179,17 @@ public partial class ManagerLibraryContext : DbContext
             entity.HasOne(d => d.Book).WithMany(p => p.BorrowingItems)
                 .HasForeignKey(d => d.BookId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__borrowing__book___5DCAEF64");
+                .HasConstraintName("FK__borrowing__book___47DBAE45");
 
             entity.HasOne(d => d.Borrowing).WithMany(p => p.BorrowingItems)
                 .HasForeignKey(d => d.BorrowingId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__borrowing__borro__5CD6CB2B");
+                .HasConstraintName("FK__borrowing__borro__46E78A0C");
         });
 
         modelBuilder.Entity<Genre>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__genres__3213E83F320EC721");
+            entity.HasKey(e => e.Id).HasName("PK__genres__3213E83FDF1F6C97");
 
             entity.ToTable("genres");
 
@@ -208,7 +208,7 @@ public partial class ManagerLibraryContext : DbContext
 
         modelBuilder.Entity<Rating>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ratings__3213E83FA6357B8B");
+            entity.HasKey(e => e.Id).HasName("PK__ratings__3213E83F7DD306C5");
 
             entity.ToTable("ratings");
 
@@ -227,17 +227,17 @@ public partial class ManagerLibraryContext : DbContext
             entity.HasOne(d => d.Book).WithMany(p => p.Ratings)
                 .HasForeignKey(d => d.BookId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ratings__book_id__5EBF139D");
+                .HasConstraintName("FK__ratings__book_id__48CFD27E");
 
             entity.HasOne(d => d.User).WithMany(p => p.Ratings)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ratings__user_id__5FB337D6");
+                .HasConstraintName("FK__ratings__user_id__49C3F6B7");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__users__3213E83F7CB6A2BD");
+            entity.HasKey(e => e.Id).HasName("PK__users__3213E83FDA16E695");
 
             entity.ToTable("users");
 

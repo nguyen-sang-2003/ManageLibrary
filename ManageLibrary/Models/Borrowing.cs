@@ -13,7 +13,7 @@ public partial class Borrowing
 
     public DateTime EndAt { get; set; }
 
-    public DateTime ActualEndAt { get; set; }
+    public DateTime? ActualEndAt { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

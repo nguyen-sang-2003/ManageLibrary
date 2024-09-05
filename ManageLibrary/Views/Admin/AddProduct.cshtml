@@ -1,0 +1,124 @@
+﻿
+@{
+    ViewData["Title"] = "AddProduct";
+    Layout = "~/Views/Share/_Layout2.cshtml";
+}
+
+@if(ViewBag.book == null)
+{
+    <a href="/admin/Product" class="btn btn-info custom-back-button">Back to list</a>
+
+<h3 class="text-danger">@ViewBag.message</h3>    
+<div class="container mt-5">
+    <h1 class="mb-4">Add Product</h1>
+    <form action="/admin/AddProduct" method="post">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="title" class="form-label">Title:</label>
+                <input type="text" id="title" name="title" class="form-control" required />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="image" class="form-label">Image:</label>
+                <input type="text" id="image" name="image" class="form-control"  />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="subtitle" class="form-label">Subtitle:</label>
+                <textarea id="subtitle" name="subtitle" class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="authorid" class="form-label">Author:</label>
+                <select id="authorid" name="authorid" class="form-control">
+                    <option value="null">Select an Author</option>
+                    @foreach (var author in ViewBag.authorList)
+                    {
+                        <option value="@author.Id">@author.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="genreid" class="form-label">Genre:</label>
+                <select id="genreid" name="genreid" class="form-control">
+                    <option value="null">Select an Author</option>
+                    @foreach (var genre in ViewBag.genreList)
+                    {
+                        <option value="@genre.Id">@genre.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="publishingyear" class="form-label">Publishing Year:</label>
+                <input type="number" id="publishingyear" name="publishingyear" class="form-control" />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="quantityinstock" class="form-label">Quantity In Stock:</label>
+                <input type="number" id="quantityinstock" name="quantityinstock" class="form-control" required/>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="description" class="form-label">Description:</label>
+                <textarea id="description" name="description" class="form-control"></textarea>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    </div>
+
+}
+else
+{
+    <a href="/admin/Product" class="btn btn-info custom-back-button">Back to list</a>
+
+    <h3 class="text-success">@ViewBag.message</h3>
+
+    <p>Thông tin sách vừa thêm:</p>
+
+    <table class="table m-2">
+        <tr>
+            <th>Title</th>
+            <td>@ViewBag.book.Title</td>
+        </tr>
+        <tr>
+            <th>Image</th>
+            <td><img src="@ViewBag.book.Image" style="max-width: 70px;" /></td>
+        </tr>
+        <tr>
+            <th>Subtitle</th>
+            <td>@ViewBag.book.Subtitle</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>@ViewBag.book.Description</td>
+        </tr>
+        <tr>
+            <th>Author</th>
+            <td>@ViewBag.book.AuthorId</td>
+        </tr>
+        <tr>
+            <th>Genre</th>
+            <td>@ViewBag.book.GenreId</td>
+        </tr>
+        <tr>
+            <th>Quantity</th>
+            <td>@ViewBag.book.QuantityInStock</td>
+        </tr>
+        <tr>
+            <th>Publishing Year</th>
+            <td>@ViewBag.book.PublishingYear</td>
+        </tr>
+    </table>
+
+
+}

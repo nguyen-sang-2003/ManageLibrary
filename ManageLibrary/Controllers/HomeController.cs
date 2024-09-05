@@ -1,5 +1,6 @@
 ﻿using ManageLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Collections;
 using System.Net;
 using static System.Reflection.Metadata.BlobBuilder;
@@ -11,7 +12,7 @@ namespace ManageLibrary.Controllers
         private readonly ManagerLibraryContext context = new ManagerLibraryContext();
         public ActionResult Index(string? title)
         {
-            var book = context.Books.ToList();
+            var book = context.Books.Where(b => b.DeleteFlag == false && b.QuantityInStock > 0).ToList();
             if(!string.IsNullOrEmpty(title)) book = book.Where(b => b.Title.Contains(title)).ToList();
             ViewBag.Book = book;
             return View();
@@ -46,7 +47,7 @@ namespace ManageLibrary.Controllers
             borrow.UserId = (int)HttpContext.Session.GetInt32("UserId");
             borrow.StartAt = DateTime.Now;
             borrow.EndAt = DateTime.Now.AddDays(7);
-            borrow.ActualEndAt = DateTime.Now.AddDays(7);
+            //borrow.ActualEndAt = DateTime.Now.AddDays(7);
             borrow.CreatedAt = DateTime.Now;
             borrow.UpdatedAt = DateTime.Now;
             borrow.DeleteFlag = false;
@@ -86,7 +87,7 @@ namespace ManageLibrary.Controllers
             }
             var userId = (int)HttpContext.Session.GetInt32("UserId");
             var borrow = context.Borrowings.Where(b => b.UserId == userId).ToList();
-            if (borrow == null) 
+            if (borrow == null || borrow.Count == 0) 
             {
                 ViewBag.message = "chưa từng mượn sách";
                 return View();
