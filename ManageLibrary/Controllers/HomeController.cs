@@ -10,11 +10,41 @@ namespace ManageLibrary.Controllers
     public class HomeController : Controller
     {
         private readonly ManagerLibraryContext context = new ManagerLibraryContext();
-        public ActionResult Index(string? title)
+        public ActionResult Index(string? title, int? authorId, int? genreId, int? indexPage)
         {
+            var author = context.Authors.Where(au => au.DeleteFlag == false).ToList();
+            ViewBag.AuthorList = author;
+            var genre = context.Genres.Where(g => g.DeleteFlag == false).ToList();
+            ViewBag.GenreList = genre;
+
             var book = context.Books.Where(b => b.DeleteFlag == false && b.QuantityInStock > 0).ToList();
             if(!string.IsNullOrEmpty(title)) book = book.Where(b => b.Title.Contains(title)).ToList();
-            ViewBag.Book = book;
+            if (authorId != null) book = book.Where(b => b.AuthorId == authorId).ToList();
+            if (genreId != null)  book = book.Where(b => b.GenreId == genreId).ToList();
+            foreach (var b in book)
+            {
+                b.Author = context.Authors.FirstOrDefault(a => a.DeleteFlag == false && a.Id == b.AuthorId);
+                b.Genre = context.Genres.FirstOrDefault(g => g.DeleteFlag == false && g.Id == b.GenreId);
+            }
+
+            int pageSize = 3;
+            if (indexPage == null) { indexPage = 0; }
+            var bookPage = book.Skip((int)indexPage * pageSize)
+                           .Take(pageSize)
+                           .ToList();
+
+            int totalBooks = book.Count();
+            int totalPages = (int)Math.Ceiling((double)totalBooks / pageSize);
+
+            ViewBag.CurrentPage = indexPage;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.PageSize = pageSize;
+
+            ViewBag.Book = bookPage;
+
+            ViewBag.SearchName = title;
+            ViewBag.SelectedAuthorId = authorId;
+            ViewBag.SelectedGenreId = genreId;
             return View();
         }
         public ActionResult DetailBook(int id)
@@ -25,6 +55,18 @@ namespace ManageLibrary.Controllers
             {
                 return RedirectToAction("Index");
             }
+
+            var rating = context.Ratings.Where(r => r.DeleteFlag==false && r.BookId==id).ToList();
+            
+            int totalRating = rating.Count;
+            double avgRating = 0;
+            if(totalRating > 0)
+            {
+                avgRating = (double)rating.Sum(r => r.Star) / (double)totalRating;
+            }
+
+            ViewBag.TotalRating = totalRating;
+            ViewBag.AvgRating = avgRating;
 
             ViewBag.BookDetail = book;
             return View();
@@ -78,7 +120,7 @@ namespace ManageLibrary.Controllers
             return RedirectToAction("Index");
         }
         
-        public ActionResult Borrowing()
+        public ActionResult Borrowing(string title, int? indexPage)
         {
             if (HttpContext.Session.GetInt32("UserId") == null)
             {
@@ -100,7 +142,26 @@ namespace ManageLibrary.Controllers
                     bi.Book = context.Books.FirstOrDefault(b => b.Id == bi.BookId);
                 }
             }
-            ViewBag.ListItems = borrow;
+
+            if (string.IsNullOrEmpty(title)) title = "";
+            borrow = borrow.Where(b => b.BorrowingItems.Any(bi => bi.Book.Title.Contains(title.Trim()))).ToList();
+
+            int pageSize = 3;
+            if (indexPage == null) { indexPage = 0; }
+            var borrowPage = borrow.Skip((int)indexPage * pageSize)
+                           .Take(pageSize)
+                           .ToList();
+
+            int totalBorrows = borrow.Count();
+            int totalPages = (int)Math.Ceiling((double)totalBorrows / pageSize);
+
+            ViewBag.CurrentPage = indexPage;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.PageSize = pageSize;
+
+            ViewBag.ListItems = borrowPage;
+
+            ViewBag.SearchUserName = title;
             return View();
         }
         

@@ -1,0 +1,134 @@
+﻿
+@{
+    ViewData["Title"] = "Rating";
+    Layout = "~/Views/Share/_Layout2.cshtml";
+}
+
+<h1>Rating</h1>
+
+<div class="container mt-5">
+    <form action="/admin/Rating" method="post">
+        <div class="d-flex flex-wrap align-items-center mb-3">
+
+            <div class="form-group me-2">
+                <label for="title" class="form-label">Title Book:</label>
+                <input type="text" id="title" name="Title" value="@ViewBag.SearchName" class="form-control" style="width:250px" placeholder="Input Title Book..." />
+            </div>
+
+            <div class="form-group me-2">
+                <label for="userId" class="form-label">Select User:</label>
+                <select id="userId" name="UserId" class="form-control" style="width:300px">
+                    <option value="" @(null == ViewBag.SelectedAuthorId ? "selected" : "")>All User</option>
+                    @foreach (var user in ViewBag.UserList)
+                    {
+                        <option value="@user.Id" @(user.Id == ViewBag.SelectedUserId ? "selected" : "")>@user.Name</option>
+                    }
+                </select>
+            </div>
+
+            </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+</div>
+
+<h3 class="text-info">@TempData["message"]</h3>
+
+<table class="table table-bordered mt-5">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Book</th>
+            <th>User</th>
+            <th>Stars</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rating in ViewBag.Rating)
+        {
+            <tr>
+                <td>@rating.Id</td>
+                <td>
+                    <div class="d-flex align-items-center mb-2">
+                        <div>
+                            <img src="@rating.Book.Image" style="max-width: 40px;" />
+                        </div>
+                        <div class="ms-2">
+                            <p class="mb-0">@rating.Book.Title</p>
+                        </div>
+                    </div>
+                </td>
+                <td>@rating.User.Name</td>
+                <td>
+                    @for (int i = 1; i <= rating.Star; i++)
+                    {
+                        <i class="fas fa-star text-warning"></i> <!-- Full star in gold color -->
+                    }
+
+                    @for (int i = rating.Star + 1; i <= 5; i++)
+                    {
+                        <i class="far fa-star text-warning"></i> <!-- Empty star in gold color -->
+                    }
+                </td>
+                <td>@rating.CreatedAt</td>
+                <td>
+                    <a class="btn btn-danger" href="/admin/DeleteRating?ratingId=@rating.Id">xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        @if (ViewBag.CurrentPage > 0)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/admin/Rating?title=@ViewBag.SearchName&userId=@ViewBag.SelectedUserId&indexPage=0">
+                    Đầu
+                </a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage > 0)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/admin/Rating?title=@ViewBag.SearchName&userId=@ViewBag.SelectedUserId&indexPage=@(ViewBag.CurrentPage - 1)">
+                    Trước
+                </a>
+            </li>
+        }
+
+        @for (int i = 0; i < ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                <a class="page-link" href="/admin/Rating?title=@ViewBag.SearchName&userId=@ViewBag.SelectedUserId&indexPage=@i">
+                    @(i + 1)
+                </a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages - 1)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/admin/Rating?title=@ViewBag.SearchName&userId=@ViewBag.SelectedUserId&indexPage=@(ViewBag.CurrentPage + 1)">
+                    Sau
+                </a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages - 1)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/admin/Rating?title=@ViewBag.SearchName&userId=@ViewBag.SelectedUserId&indexPage=@(ViewBag.TotalPages - 1)">
+                    Cuối
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

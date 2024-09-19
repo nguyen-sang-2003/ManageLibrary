@@ -11,8 +11,27 @@
         <td>@ViewBag.BookDetail.Id</td>
     </tr>
     <tr>
+        <th>Rating</th>
+        <td>
+            @for (int i = 1; i <= (int)Math.Floor(ViewBag.AvgRating); i++)
+            {
+                <i class="fas fa-star text-warning"></i> <!-- Full star -->
+            }
+            @if (ViewBag.AvgRating % 1 != 0)
+            {
+                <i class="fas fa-star-half-alt text-warning"></i> <!-- Half star -->
+            }
+
+            @for (int i = (int)Math.Ceiling(ViewBag.AvgRating) + 1; i <= 5; i++)
+            {
+                <i class="far fa-star text-warning"></i> <!-- Empty star -->
+            }
+            (@ViewBag.TotalRating votes)
+        </td>
+    </tr>
+    <tr>
         <th>Image</th>
-        <td><img src="@ViewBag.BookDetail.Image" style="max-width: 70px;" /></td>
+        <td><img src="@ViewBag.BookDetail.Image" style="max-width: 200px;" /></td>
     </tr>
     <tr>
         <th>Title</th>

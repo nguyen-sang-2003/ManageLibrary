@@ -7,13 +7,24 @@
 <h1>Genre</h1>
 
 <div class="container mt-5">
-    <form action="/admin/AddGenre" method="post">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="Name" required />
-        <button type="submit" class="btn btn-primary">Add New Author</button>
-    </form>
-    <p class="text-info">@TempData["message"]</p>
+    <div class="row justify-content-between">
+        <div class="col-md-5">
+            <form action="/admin/Genre" method="post" class="d-flex">
+                <input type="text" id="name" name="Name" value="@ViewBag.SearchName" class="form-control me-2" placeholder="Input name genre..." />
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+
+        <div class="col-md-5">
+            <form action="/admin/AddGenre" method="post" class="d-flex">
+                <input type="text" id="name" name="Name" class="form-control me-2" placeholder="Author Name" required />
+                <button type="submit" class="btn btn-success" style="width:300px">Add New Genre</button>
+            </form>
+        </div>
+    </div>
 </div>
+
+<p class="text-info">@TempData["message"]</p>
 
 <table class="table table-bordered mt-5">
     <thead>
@@ -50,4 +61,53 @@
         }
     </tbody>
 </table>
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        @if (ViewBag.CurrentPage > 0)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/admin/Genre?name=@ViewBag.SearchName&indexPage=0">
+                    Đầu
+                </a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage > 0)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/admin/Genre?name=@ViewBag.SearchName&indexPage=@(ViewBag.CurrentPage - 1)">
+                    Trước
+                </a>
+            </li>
+        }
+
+        @for (int i = 0; i < ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                <a class="page-link" href="/admin/Genre?name=@ViewBag.SearchName&indexPage=@i">
+                    @(i+1)
+                </a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages - 1)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/admin/Genre?name=@ViewBag.SearchName&indexPage=@(ViewBag.CurrentPage + 1)">
+                    Sau
+                </a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages - 1)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/admin/Genre?name=@ViewBag.SearchName&indexPage=@(ViewBag.TotalPages - 1)">
+                    Cuối
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
 

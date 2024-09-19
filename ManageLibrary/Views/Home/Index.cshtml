@@ -19,10 +19,46 @@
 
         <p class="text-primary">@TempData["message"]</p>
         
-        <form method="post" action="/home/index" class="d-flex">
-            <input type="text" name="title" class="me-2" placeholder="Search by title...">
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
+        <div class="container mt-5" >
+			<form action="/home/index" method="post" style="margin-top:-50px">
+                <div class="d-flex flex-wrap align-items-center mb-3">
+                    <!--Title-->
+                    <div class="form-group me-2">
+                        <label for="title" class="form-label">Title:</label>
+                        <input type="text" id="title" name="Title" value="@ViewBag.SearchName" class="form-control" style="width:250px" placeholder="Input Title..." />
+                    </div>
+
+                    <!--Author-->
+                    <div class="form-group me-2">
+                        <label for="authorId" class="form-label">Select Author:</label>
+                        <select id="authorId" name="AuthorId" class="form-control" style="width:300px">
+                            <option value="" @(null == ViewBag.SelectedAuthorId ? "selected" : "")>All Author</option>
+                            @foreach (var author in ViewBag.AuthorList)
+                            {
+                                <option value="@author.Id" @(author.Id == ViewBag.SelectedAuthorId ? "selected" : "")>@author.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!--Genre-->
+                    <div class="form-group me-2">
+                        <label for="genreId" class="form-label">Select Genre:</label>
+                        <select id="genreId" name="GenreId" class="form-control" style="width:300px">
+                            <option value="" @(null == ViewBag.SelectedGenreId ? "selected" : "")>All Genre</option>
+                            @foreach (var genre in ViewBag.GenreList)
+                            {
+                                <option value="@genre.Id" @(genre.Id == ViewBag.SelectedGenreId ? "selected" : "")>@genre.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
 
         <form method="post" action="/home/borrow">
             <button type="submit" class="btn btn-success" style="float:right">Mượn</button>
@@ -33,6 +69,9 @@
                         <th>Image</th>
                         <th>Title</th>
                         <th>Subtitle</th>
+                        <th>Author</th>
+                        <th>Genre</th>
+                        <th>Publish Year</th>
                         <th>Quantity</th>
                         <th>Action</th>
                         <th>Borrow</th>
@@ -46,6 +85,9 @@
                             <td><img src="@book.Image" class="img-fluid" style="max-width: 50px;" /></td>
                             <td>@book.Title</td>
                             <td>@book.Subtitle</td>
+                            <td>@book.Author.Name</td>
+                            <td>@book.Genre.Name</td>
+                            <td>@book.PublishingYear</td>
                             <td>@book.QuantityInStock</td>
                             <td>
                                 <a class="btn btn-primary" href="/home/detailbook/@book.Id">chi tiết</a>
@@ -62,3 +104,58 @@
         </form>
     </div>
 </div>
+
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        @if (ViewBag.CurrentPage > 0)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/home/index?title=@ViewBag.SearchName&authorId=@ViewBag.SelectedAuthorId
+                                            &genreId=@ViewBag.SelectedGenreId&indexPage=0">
+                    Đầu
+                </a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage > 0)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/home/index?title=@ViewBag.SearchName&authorId=@ViewBag.SelectedAuthorId
+                                            &genreId=@ViewBag.SelectedGenreId&indexPage=@(ViewBag.CurrentPage - 1)">
+                    Trước
+                </a>
+            </li>
+        }
+
+        @for (int i = 0; i < ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                <a class="page-link" href="/home/index?title=@ViewBag.SearchName&authorId=@ViewBag.SelectedAuthorId
+                                            &genreId=@ViewBag.SelectedGenreId&indexPage=@i">
+                    @(i + 1)
+                </a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages - 1)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/home/index?title=@ViewBag.SearchName&authorId=@ViewBag.SelectedAuthorId
+                                           &genreId=@ViewBag.SelectedGenreId&indexPage=@(ViewBag.CurrentPage + 1)">
+                    Sau
+                </a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages - 1)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/home/index?title=@ViewBag.SearchName&authorId=@ViewBag.SelectedAuthorId
+                                            &genreId=@ViewBag.SelectedGenreId&indexPage=@(ViewBag.TotalPages - 1)">
+                    Cuối
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

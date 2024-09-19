@@ -13,8 +13,23 @@
     </li>
 }
 
+
+
 <div class="container-fluid">
     <h2>Danh sách mượn</h2>
+    <form action="/home/borrowing" method="post" style="margin-top:20px">
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <label for="title" class="form-label">Title:</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" id="title" name="Title" value="@ViewBag.SearchUserName" class="form-control" style="width:250px" placeholder="Input Title..." />
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </form>
     <div class="row">
 
         <p class="text-primary">@ViewBag.message</p>
@@ -70,5 +85,55 @@
             </table>
     </div>
 </div>
+
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        @if (ViewBag.CurrentPage > 0)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/home/borrowing?title=@ViewBag.SearchUserName&indexPage=0">
+                    Đầu
+                </a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage > 0)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/home/borrowing?title=@ViewBag.SearchUserName&indexPage=@(ViewBag.CurrentPage - 1)">
+                    Trước
+                </a>
+            </li>
+        }
+
+        @for (int i = 0; i < ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                <a class="page-link" href="/home/borrowing?title=@ViewBag.SearchUserName&indexPage=@i">
+                    @(i + 1)
+                </a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages - 1)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/home/borrowing?title=@ViewBag.SearchUserName&indexPage=@(ViewBag.CurrentPage + 1)">
+                    Sau
+                </a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages - 1)
+        {
+            <li class="page-item">
+                <a class="page-link" href="/home/borrowing?title=@ViewBag.SearchUserName&indexPage=@(ViewBag.TotalPages - 1)">
+                    Cuối
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
 
 

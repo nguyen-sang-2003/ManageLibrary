@@ -1,5 +1,7 @@
-﻿using ManageLibrary.Models;
+﻿using Humanizer.Localisation;
+using ManageLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace ManageLibrary.Controllers
 {
@@ -10,10 +12,50 @@ namespace ManageLibrary.Controllers
         {
             return View();
         }
-        public ActionResult Product() 
+        public ActionResult Product(string title, int? authorId, int? genreId, int? indexPage) 
         {
-            var book = context.Books.Where(b => b.DeleteFlag==false).ToList();
-            ViewBag.Book = book;
+            var author = context.Authors.Where(au => au.DeleteFlag == false).ToList();
+            ViewBag.AuthorList = author;
+            var genre = context.Genres.Where(g => g.DeleteFlag == false).ToList();
+            ViewBag.GenreList = genre;
+
+            if (string.IsNullOrEmpty(title)) title = "";
+            var book = context.Books.Where(b => b.DeleteFlag==false && b.Title.Contains(title)).ToList();
+
+            if (authorId != null)
+            {
+                book = book.Where(b => b.AuthorId == authorId).ToList();
+            }
+            
+            if (genreId != null)
+            {
+                book = book.Where(b => b.GenreId == genreId).ToList();
+            }
+
+            foreach(var b in book)
+            {
+                b.Author = context.Authors.FirstOrDefault(a => a.DeleteFlag == false && a.Id == b.AuthorId);
+                b.Genre = context.Genres.FirstOrDefault(g => g.DeleteFlag == false && g.Id == b.GenreId);
+            }
+
+            int pageSize = 3;
+            if (indexPage == null) { indexPage = 0; }
+            var bookPage = book.Skip((int)indexPage * pageSize)
+                           .Take(pageSize)
+                           .ToList();
+
+            int totalBooks = book.Count();
+            int totalPages = (int)Math.Ceiling((double)totalBooks / pageSize);
+
+            ViewBag.CurrentPage = indexPage;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.PageSize = pageSize;
+
+            ViewBag.Book = bookPage;
+
+            ViewBag.SearchName = title;
+            ViewBag.SelectedAuthorId = authorId;
+            ViewBag.SelectedGenreId = genreId;
             return View();
         }
         public ActionResult AddProduct(string? message)
@@ -91,17 +133,48 @@ namespace ManageLibrary.Controllers
                 return RedirectToAction("Index");
             }
 
+            var rating = context.Ratings.Where(r => r.DeleteFlag == false && r.BookId == id).ToList();
+
+            int totalRating = rating.Count;
+            double avgRating = 0;
+            if (totalRating > 0)
+            {
+                avgRating = (double)rating.Sum(r => r.Star) / (double)totalRating;
+            }
+
+            ViewBag.TotalRating = totalRating;
+            ViewBag.AvgRating = avgRating;
+
             ViewBag.BookDetail = book;
             return View();
         }
-        public ActionResult Author()
+        public ActionResult Author(string name,int? indexPage)
         {
-            var author = context.Authors.Where(au => au.DeleteFlag == false).ToList();
+            
+            if (string.IsNullOrEmpty(name)) name = "";
+            var author = context.Authors.Where(au => au.DeleteFlag == false && au.Name.Contains(name)).ToList();
             foreach (var a in author)
             {
                 a.Books = context.Books.Where(b => b.AuthorId == a.Id && b.DeleteFlag==false).ToList();
             }
-            ViewBag.author = author;
+
+            
+            int pageSize = 2;
+            if (indexPage == null) { indexPage = 0; }
+            var authorPage = author.Skip((int)indexPage * pageSize)
+                           .Take(pageSize)
+                           .ToList();
+
+            int totalAuthors = author.Count();
+            int totalPages = (int)Math.Ceiling((double)totalAuthors / pageSize);
+
+            ViewBag.CurrentPage = indexPage;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.PageSize = pageSize;
+
+            ViewBag.author = authorPage;
+
+            ViewBag.SearchName = name;
             return View();
         }
 
@@ -161,14 +234,30 @@ namespace ManageLibrary.Controllers
             return RedirectToAction("Author");
         }
 
-        public ActionResult Genre()
+        public ActionResult Genre(string name, int? indexPage)
         {
-            var genre = context.Genres.Where(g => g.DeleteFlag==false).ToList();
+            if (string.IsNullOrEmpty(name)) name = "";
+            var genre = context.Genres.Where(g => g.DeleteFlag==false && g.Name.Contains(name)).ToList();
             foreach (var a in genre)
             {
                 a.Books = context.Books.Where(b => b.GenreId == a.Id && b.DeleteFlag == false).ToList();
             }
-            ViewBag.genre = genre;
+
+            int pageSize = 2;
+            if (indexPage == null) { indexPage = 0; }
+            var genrePage = genre.Skip((int)indexPage * pageSize)
+                           .Take(pageSize)
+                           .ToList();
+
+            int totalGenres = genre.Count();
+            int totalPages = (int)Math.Ceiling((double)totalGenres / pageSize);
+
+            ViewBag.CurrentPage = indexPage;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.PageSize = pageSize;
+
+            ViewBag.genre = genrePage;
+            ViewBag.SearchName = name;
             return View();
         }
         public ActionResult AddGenre(string name)
@@ -229,6 +318,111 @@ namespace ManageLibrary.Controllers
             }
             else { TempData["message"] = "delete fail. genre not exit"; }
             return RedirectToAction("Genre");
+        }
+        
+        public ActionResult Borrowing(string userName, int? indexPage)
+        {
+            var userList =context.Users.Where(u => u.DeleteFlag==false).ToList();
+            ViewBag.UserList = userList;
+
+            var borrow = context.Borrowings.Where(b=>b.DeleteFlag==false).ToList();
+            foreach(var b in borrow)
+            {
+                b.User = context.Users.FirstOrDefault(u => u.Id == b.UserId && u.DeleteFlag==false);
+                b.BorrowingItems = context.BorrowingItems
+                                .Where(bi => bi.BorrowingId == b.Id && bi.DeleteFlag==false)
+                                .ToList();
+                foreach(var borItem in b.BorrowingItems)
+                {
+                    borItem.Book = context.Books.FirstOrDefault(bo => bo.Id == borItem.BookId);
+                }
+            }
+            if (string.IsNullOrEmpty(userName)) userName = "";
+            borrow = borrow.Where(b => b.User.Name.Contains(userName)).ToList();
+
+            int pageSize = 4;
+            if (indexPage == null) { indexPage = 0; }
+            var borrowPage = borrow.Skip((int)indexPage * pageSize)
+                           .Take(pageSize)
+                           .ToList();
+
+            int totalBorrows = borrow.Count();
+            int totalPages = (int)Math.Ceiling((double)totalBorrows / pageSize);
+
+            ViewBag.CurrentPage = indexPage;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.PageSize = pageSize;
+
+            ViewBag.BorrowList = borrowPage;
+
+            ViewBag.SearchUserName = userName;
+            return View();
+        }
+        public ActionResult ButtonReturnBook(int borrowingId)
+        {
+            var borrowing = context.Borrowings.FirstOrDefault(b => b.DeleteFlag == false && b.Id == borrowingId);
+            if (borrowing == null)
+            {
+                TempData["message"] = "Borrowing record not found.";
+                return RedirectToAction("Borrowing");
+            }
+            borrowing.ActualEndAt = DateTime.Now;
+            context.Borrowings.Update(borrowing);
+            context.SaveChanges();
+            TempData["message"] = "return book successful.";
+            return RedirectToAction("Borrowing");
+        }
+        
+        public ActionResult Rating(string title, int? userId, int? indexPage)
+        {
+            var userList = context.Users.Where(u => u.DeleteFlag == false).ToList();
+            ViewBag.UserList = userList;
+            
+            var rating = context.Ratings.Where(r => r.DeleteFlag == false).ToList();
+            foreach(var r in rating)
+            {
+                r.Book = context.Books.FirstOrDefault(b => b.DeleteFlag == false && b.Id == r.BookId);
+                r.User = context.Users.FirstOrDefault(u => u.DeleteFlag == false && u.Id == r.UserId);
+            }
+            if (string.IsNullOrEmpty(title)) title = "";
+            rating = rating.Where(r => r.Book.Title.Contains(title.Trim())).ToList();
+            if (userId != null) rating = rating.Where(r => r.UserId == userId).ToList();
+
+            int pageSize = 3;
+            if (indexPage == null) { indexPage = 0; }
+            var ratingPage = rating.Skip((int)indexPage * pageSize)
+                           .Take(pageSize)
+                           .ToList();
+
+            int totalRatings = rating.Count();
+            int totalPages = (int)Math.Ceiling((double)totalRatings / pageSize);
+
+            ViewBag.CurrentPage = indexPage;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.PageSize = pageSize;
+
+
+            ViewBag.Rating = ratingPage;
+
+            ViewBag.SearchName = title;
+            ViewBag.SelectedUserId = userId;
+            return View();
+        }
+        public ActionResult DeleteRating(int ratingId)
+        {
+            var rating = context.Ratings.FirstOrDefault(r => r.Id == ratingId && r.DeleteFlag == false);
+            if(rating != null) 
+            {
+                rating.DeleteFlag = true;
+                context.Ratings.Update(rating);
+                context.SaveChanges();
+                TempData["message"] = "return book successful.";
+            }
+            else
+            {
+                TempData["message"] = "Rating record not found.";
+            }
+            return RedirectToAction("Rating");
         }
     }
 }
