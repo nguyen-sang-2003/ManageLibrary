@@ -148,6 +148,58 @@ namespace ManageLibrary.Controllers
             ViewBag.BookDetail = book;
             return View();
         }
+        public ActionResult UpdateBook(int id)
+        {
+            var authorList = context.Authors.Where(a => a.DeleteFlag == false).ToList();
+            ViewBag.authorList = authorList;
+            var genreList = context.Genres.Where(g => g.DeleteFlag == false).ToList();
+            ViewBag.genreList = genreList;
+
+            var book = context.Books.FirstOrDefault(b => b.Id==id && b.DeleteFlag == false);
+            if(book==null)
+            {
+                ViewBag.message = "not found book.";
+                return View();
+            }
+            ViewBag.book = book;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult UpdateBook(Book book)
+        {
+            var bookUpdate = context.Books.FirstOrDefault(b => b.Id==book.Id && b.DeleteFlag==false);
+            var bookExit = context.Books.FirstOrDefault(b => b.Title.Equals(book.Title) && b.Id!=book.Id);
+            if(bookExit==null)
+            {
+                if (bookUpdate != null)
+                {
+                    bookUpdate.Title = book.Title;
+                    bookUpdate.Image = book.Image;
+                    bookUpdate.Subtitle = book.Subtitle;
+                    bookUpdate.AuthorId = book.AuthorId;
+                    bookUpdate.GenreId = book.GenreId;
+                    bookUpdate.PublishingYear = book.PublishingYear;
+                    bookUpdate.QuantityInStock = book.QuantityInStock;
+                    bookUpdate.Description = book.Description;
+                    bookUpdate.UpdatedAt = DateTime.Now;
+
+                    context.Books.Update(bookUpdate);
+                    context.SaveChanges();
+                    ViewBag.message = "update successfull";
+
+                }
+                else
+                {
+                    ViewBag.message = "book not found.";
+                }
+
+            }
+            else
+            {
+                ViewBag.message = "book exit.";
+            }
+            return View();
+        }
         public ActionResult Author(string name,int? indexPage)
         {
             
@@ -370,6 +422,14 @@ namespace ManageLibrary.Controllers
             context.Borrowings.Update(borrowing);
             context.SaveChanges();
             TempData["message"] = "return book successful.";
+            var borrowingItem = context.BorrowingItems.Where(bi => bi.DeleteFlag==false && bi.BorrowingId == borrowing.Id).ToList();
+            foreach(var item in borrowingItem)
+            {
+                var book = context.Books.FirstOrDefault(b => b.DeleteFlag == false && b.Id == item.BookId);
+                book.QuantityInStock = book.QuantityInStock + 1;
+                context.Books.Update(book);
+                context.SaveChanges();
+            }
             return RedirectToAction("Borrowing");
         }
         

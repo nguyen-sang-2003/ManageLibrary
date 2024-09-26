@@ -1,0 +1,112 @@
+﻿@{
+    ViewData["Title"] = "UpdateBook";
+    Layout = "~/Views/Share/_Layout2.cshtml";
+}
+
+<a href="/admin/Product" class="btn btn-info custom-back-button">Back to list</a>
+
+@if (ViewBag.book != null)
+{
+    <div class="container mt-5">
+        <h1 class="mb-4">Update Product</h1>
+        <form action="/admin/UpdateBook" method="post" onsubmit="return validateForm()">
+            <div><input type="hidden" id="id" name="id" value="@ViewBag.book.Id" /></div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="title" class="form-label">Title:</label>
+                    <input type="text" id="title" name="title" value="@ViewBag.book.Title" class="form-control" required />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="image" class="form-label">Image:</label>
+                    <input type="text" id="image" name="image" value="@ViewBag.book.Image" class="form-control" required />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="subtitle" class="form-label">Subtitle:</label>
+                    <textarea id="subtitle" name="subtitle" class="form-control" required>@ViewBag.book.Subtitle</textarea>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="authorid" class="form-label">Author:</label>
+                    <select id="authorid" name="authorid" class="form-control">
+                        <option value="null">Select an Author</option>
+                        @foreach (var author in ViewBag.authorList)
+                        {
+                            <option value="@author.Id" @(author.Id == ViewBag.book.AuthorId ? "selected" : "")>@author.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="genreid" class="form-label">Genre:</label>
+                    <select id="genreid" name="genreid" class="form-control">
+                        <option value="null">Select a Genre</option>
+                        @foreach (var genre in ViewBag.genreList)
+                        {
+                            <option value="@genre.Id" @(genre.Id == ViewBag.book.GenreId ? "selected" : "")>@genre.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="publishingyear" class="form-label">Publishing Year:</label>
+                    <input type="number" id="publishingyear" name="publishingyear" value="@ViewBag.book.PublishingYear" class="form-control" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="quantityinstock" class="form-label">Quantity In Stock:</label>
+                    <input type="number" id="quantityinstock" name="quantityinstock" value="@ViewBag.book.QuantityInStock" class="form-control" required />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="description" class="form-label">Description:</label>
+                    <textarea id="description" name="description" class="form-control" required>@ViewBag.book.Description</textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+}
+else
+{
+    <h3 class="text-danger">@ViewBag.message</h3>
+}
+
+<script>
+    function validateForm() {
+        const title = document.getElementById('title').value.trim();
+        const image = document.getElementById('image').value.trim();
+        const subtitle = document.getElementById('subtitle').value.trim();
+        const description = document.getElementById('description').value.trim();
+        const publishingYear = document.getElementById('publishingyear').value;
+        const quantityInStock = document.getElementById('quantityinstock').value;
+
+        if (!title || !image || !subtitle || !description) {
+            alert('Title, Image, Subtitle, and Description cannot be empty.');
+            return false;
+        }
+
+        if (publishingYearInput !== "") {
+            const publishingYear = parseInt(publishingYearInput);
+            if (isNaN(publishingYear) || publishingYear <= 0) {
+                alert("Publishing year must be a positive number.");
+                return false;
+            }
+        }
+
+        if (!Number.isInteger(Number(quantityInStock)) || Number(quantityInStock) < 0) {
+            alert('Quantity In Stock must be a non-negative integer.');
+            return false;
+        }
+
+        return true; // Form is valid
+    }
+</script>

@@ -27,7 +27,7 @@ namespace ManageLibrary.Controllers
                 b.Genre = context.Genres.FirstOrDefault(g => g.DeleteFlag == false && g.Id == b.GenreId);
             }
 
-            int pageSize = 3;
+            int pageSize = 5;
             if (indexPage == null) { indexPage = 0; }
             var bookPage = book.Skip((int)indexPage * pageSize)
                            .Take(pageSize)
@@ -112,6 +112,9 @@ namespace ManageLibrary.Controllers
                 borrowingItem.UpdatedAt = DateTime.Now;
                 borrowingItem.DeleteFlag = false;
                 context.BorrowingItems.Add(borrowingItem);
+                context.SaveChanges();
+                book.QuantityInStock = book.QuantityInStock - 1;
+                context.Books.Update(book);
                 context.SaveChanges();
             }
 

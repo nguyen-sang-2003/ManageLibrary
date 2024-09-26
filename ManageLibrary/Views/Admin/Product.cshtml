@@ -52,6 +52,8 @@
 
 <a href="/admin/AddProduct" class="btn btn-success" style="float:right">Add New Product</a>
 
+<p class="text-info">@TempData["message"]</p>
+
 <table class="table table-bordered mt-5">
     <thead>
         <tr>
@@ -75,10 +77,11 @@
                 <td>@book.Title</td>
                 <td>@book.Subtitle</td>
                 <td>@book.QuantityInStock</td>
-                <td>@book.Author.Name</td>
-                <td>@book.Genre.Name</td>
+                <td>@(book.Author != null ? book.Author.Name : "No Author")</td>
+                <td>@(book.Genre != null ? book.Genre.Name : "No Genre")</td>
                 <td>@book.PublishingYear</td>
                 <td>
+                    <a class="btn btn-success" href="/admin/UpdateBook/@book.Id">cập nhật</a>
                     <a class="btn btn-primary" href="/admin/DetailBook/@book.Id">chi tiết</a>
                     <a class="btn btn-danger" href="/admin/DeleteBook/@book.Id">xóa</a>
 
