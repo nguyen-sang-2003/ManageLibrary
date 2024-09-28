@@ -84,6 +84,7 @@ CREATE TABLE [ratings] (
   [id] int PRIMARY KEY NOT NULL IDENTITY(1, 1),
   [book_id] int NOT NULL,
   [user_id] int NOT NULL,
+  [borrowingItem_id] int NOT NULL,
   [star] int NOT NULL,
   [created_at] datetime NOT NULL,
   [updated_at] datetime NOT NULL,
