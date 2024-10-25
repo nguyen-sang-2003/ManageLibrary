@@ -53,15 +53,21 @@
                 <td>@bl.EndAt.ToString("dd-MM-yyyy")</td>
                 <td>@(bl.ActualEndAt != null ? bl.ActualEndAt.ToString("dd-MM-yyyy") : "null")</td>
                 <td>
-                    @if(bl.ActualEndAt == null)
-                    {
-                        <a href="/admin/ButtonReturnBook?borrowingId=@bl.Id" class="btn btn-primary">return</a>
-                    }
-                    else
-                    {
-                        <p>done</p>
-                    }
-
+                    <ul>
+                        @foreach (var item in bl.BorrowingItems)
+                        {
+                            <li>
+                                @if (bl.ActualEndAt == null)
+                                {
+                                    <a href="/admin/ButtonReturnBook?borrowingId=@bl.Id" class="btn btn-primary">confirm</a>
+                                }
+                                else
+                                {
+                                    <p>done</p>
+                                }
+                            </li>
+                        }
+                    </ul>
                  </td>
 
             </tr>

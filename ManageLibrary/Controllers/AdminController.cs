@@ -14,6 +14,11 @@ namespace ManageLibrary.Controllers
         }
         public ActionResult Product(string title, int? authorId, int? genreId, int? indexPage) 
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var author = context.Authors.Where(au => au.DeleteFlag == false).ToList();
             ViewBag.AuthorList = author;
             var genre = context.Genres.Where(g => g.DeleteFlag == false).ToList();
@@ -60,6 +65,11 @@ namespace ManageLibrary.Controllers
         }
         public ActionResult AddProduct(string? message)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var authorList = context.Authors.Where(a => a.DeleteFlag==false).ToList();
             ViewBag.authorList = authorList;
             var genreList = context.Genres.Where(g => g.DeleteFlag == false).ToList();
@@ -74,6 +84,11 @@ namespace ManageLibrary.Controllers
         [HttpPost]
         public ActionResult AddProduct(Book book)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var bookExit = context.Books.FirstOrDefault(b => b.Title.Equals(book.Title));
             if (bookExit==null)
             {
@@ -114,6 +129,11 @@ namespace ManageLibrary.Controllers
         }
         public ActionResult DeleteBook(int id)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var book = context.Books.FirstOrDefault(b => b.Id == id);
             if (book != null) { 
                 book.DeleteFlag = true;
@@ -126,6 +146,11 @@ namespace ManageLibrary.Controllers
         }
         public ActionResult DetailBook(int id)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var book = context.Books.FirstOrDefault(x => x.Id == id);
 
             if (book == null)
@@ -150,6 +175,11 @@ namespace ManageLibrary.Controllers
         }
         public ActionResult UpdateBook(int id)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var authorList = context.Authors.Where(a => a.DeleteFlag == false).ToList();
             ViewBag.authorList = authorList;
             var genreList = context.Genres.Where(g => g.DeleteFlag == false).ToList();
@@ -167,6 +197,11 @@ namespace ManageLibrary.Controllers
         [HttpPost]
         public ActionResult UpdateBook(Book book)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var bookUpdate = context.Books.FirstOrDefault(b => b.Id==book.Id && b.DeleteFlag==false);
             var bookExit = context.Books.FirstOrDefault(b => b.Title.Equals(book.Title) && b.Id!=book.Id);
             if(bookExit==null)
@@ -202,7 +237,12 @@ namespace ManageLibrary.Controllers
         }
         public ActionResult Author(string name,int? indexPage)
         {
-            
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
+
             if (string.IsNullOrEmpty(name)) name = "";
             var author = context.Authors.Where(au => au.DeleteFlag == false && au.Name.Contains(name)).ToList();
             foreach (var a in author)
@@ -232,6 +272,11 @@ namespace ManageLibrary.Controllers
 
         public ActionResult AddAuthor(string name)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var authorExit = context.Authors.FirstOrDefault(x => x.Name==name);
             if (authorExit == null) 
             {
@@ -267,6 +312,11 @@ namespace ManageLibrary.Controllers
         }
         public ActionResult DeleteAuthor(int id)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var author = context.Authors.FirstOrDefault(x => x.Id == id);
             if (author != null)
             {
@@ -288,6 +338,11 @@ namespace ManageLibrary.Controllers
 
         public ActionResult Genre(string name, int? indexPage)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             if (string.IsNullOrEmpty(name)) name = "";
             var genre = context.Genres.Where(g => g.DeleteFlag==false && g.Name.Contains(name)).ToList();
             foreach (var a in genre)
@@ -314,6 +369,11 @@ namespace ManageLibrary.Controllers
         }
         public ActionResult AddGenre(string name)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var genreExit = context.Genres.FirstOrDefault(x => x.Name == name);
             if (genreExit == null) 
             { 
@@ -353,6 +413,11 @@ namespace ManageLibrary.Controllers
 
         public ActionResult DeleteGenre(int id)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var genre = context.Genres.FirstOrDefault(b => b.Id == id);
             if (genre != null) 
             {
@@ -374,6 +439,11 @@ namespace ManageLibrary.Controllers
         
         public ActionResult Borrowing(string userName, int? indexPage)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var userList =context.Users.Where(u => u.DeleteFlag==false).ToList();
             ViewBag.UserList = userList;
 
@@ -412,6 +482,11 @@ namespace ManageLibrary.Controllers
         }
         public ActionResult ButtonReturnBook(int borrowingId)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var borrowing = context.Borrowings.FirstOrDefault(b => b.DeleteFlag == false && b.Id == borrowingId);
             if (borrowing == null)
             {
@@ -435,6 +510,11 @@ namespace ManageLibrary.Controllers
         
         public ActionResult Rating(string title, int? userId, int? indexPage)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var userList = context.Users.Where(u => u.DeleteFlag == false).ToList();
             ViewBag.UserList = userList;
             
@@ -470,6 +550,11 @@ namespace ManageLibrary.Controllers
         }
         public ActionResult DeleteRating(int ratingId)
         {
+            if (HttpContext.Session.GetInt32("AdminId") == null)
+            {
+                TempData["message"] = "Please Login.";
+                return RedirectToAction("Login", "Account");
+            }
             var rating = context.Ratings.FirstOrDefault(r => r.Id == ratingId && r.DeleteFlag == false);
             if(rating != null) 
             {

@@ -25,6 +25,7 @@
             <input type="password" id="password" name="password" class="form-control" style="max-width: 300px;" required />
         </div>
         <p class="text-danger">@ViewBag.message</p>
+        <p class="text-danger">@TempData["message"]</p>
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
 </div>

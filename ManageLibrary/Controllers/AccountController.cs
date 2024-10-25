@@ -33,7 +33,7 @@ namespace ManageLibrary.Controllers
             }
             else 
             {
-                ViewBag.message = "userName, password wrong";
+                ViewBag.message = "username, password wrong";
                 return View();
             }
         }

@@ -74,6 +74,7 @@ CREATE TABLE [borrowing_items] (
   [borrowing_id] int NOT NULL,
   [book_id] int NOT NULL,
   [quantity] int NOT NULL,
+  [actual_end_at] datetime,
   [created_at] datetime NOT NULL,
   [updated_at] datetime NOT NULL,
   [delete_flag] bit NOT NULL
@@ -111,6 +112,9 @@ ALTER TABLE [ratings] ADD FOREIGN KEY ([book_id]) REFERENCES [books] ([id])
 GO
 
 ALTER TABLE [ratings] ADD FOREIGN KEY ([user_id]) REFERENCES [users] ([id])
+GO
+
+ALTER TABLE [ratings] ADD FOREIGN KEY ([borrowingItem_id]) REFERENCES [borrowing_items] ([id])
 GO
 
 
@@ -163,9 +167,9 @@ INSERT INTO [borrowing_items] (borrowing_id, book_id, quantity, created_at, upda
 (4, 4, 1, GETDATE(), GETDATE(), 0),
 (5, 5, 1, GETDATE(), GETDATE(), 0);
 
-INSERT INTO [ratings] (book_id, user_id, star, created_at, updated_at, delete_flag) VALUES
-(1, 1, 5, GETDATE(), GETDATE(), 0),
-(2, 2, 4, GETDATE(), GETDATE(), 0),
-(3, 2, 3, GETDATE(), GETDATE(), 0),
-(4, 1, 5, GETDATE(), GETDATE(), 0),
-(5, 1, 4, GETDATE(), GETDATE(), 0);
+INSERT INTO [ratings] (book_id, user_id, borrowingItem_id, star, created_at, updated_at, delete_flag) VALUES
+(1, 1, 1, 5, GETDATE(), GETDATE(), 0),
+(2, 2, 1, 4, GETDATE(), GETDATE(), 0),
+(3, 2, 1, 3, GETDATE(), GETDATE(), 0),
+(4, 1, 2, 5, GETDATE(), GETDATE(), 0),
+(5, 1, 2, 4, GETDATE(), GETDATE(), 0);

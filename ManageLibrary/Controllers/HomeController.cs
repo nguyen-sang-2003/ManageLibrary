@@ -122,7 +122,6 @@ namespace ManageLibrary.Controllers
             TempData["message"] = "Borrowing successful.";
             return RedirectToAction("Index");
         }
-        
         public ActionResult Borrowing(string title, int? indexPage)
         {
             if (HttpContext.Session.GetInt32("UserId") == null)
@@ -167,6 +166,9 @@ namespace ManageLibrary.Controllers
             ViewBag.SearchUserName = title;
             return View();
         }
-        
+        public ActionResult FeedBack(int id)
+        {
+            return View();
+        }
     }
 }

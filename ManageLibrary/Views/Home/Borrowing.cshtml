@@ -42,6 +42,7 @@
                         <th>Start</th>
                         <th>end</th>
                         <th>actual end</th>
+                        <th>feedback</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,13 +66,32 @@
                                     }
                                 </td>
 
-                            <td>@item.StartAt.ToString("dd-MM-yyyy")</td>
-                            <td>@item.EndAt.ToString("dd-MM-yyyy")</td>
-                            @* <td>@item.ActualEndAt.ToString("dd-MM-yyyy")</td> *@
-                            <td>@(item.ActualEndAt != null ? item.ActualEndAt.ToString("dd-MM-yyyy") : "null")</td>
-
-
-
+                                <td>@item.StartAt.ToString("dd-MM-yyyy")</td>
+                                <td>@item.EndAt.ToString("dd-MM-yyyy")</td>
+                                @* <td>@item.ActualEndAt.ToString("dd-MM-yyyy")</td> *@
+                                <td>
+                                @foreach (var borrowItem in item.BorrowingItems)
+                                {
+                                    <div class="d-flex align-items-center mb-2">
+                                        @(item.ActualEndAt != null ? item.ActualEndAt.ToString("dd-MM-yyyy") : "null")
+                                    </div>
+                                }
+                                </td>
+                                <td>
+                                    @foreach (var borrowItem in item.BorrowingItems)
+                                    {
+                                        <div class="d-flex align-items-center mb-2">
+                                        @if (item.ActualEndAt != null)
+                                        {
+                                            <a href="/home/feedback" class="btn btn-success">feedback</a>
+                                        }
+                                        else
+                                        {
+                                            <div class="text-info">Feedback can only after return the book</div>
+                                        }
+                                        </div>
+                                    }
+                                </td>
                             </tr>
                         }
                     }

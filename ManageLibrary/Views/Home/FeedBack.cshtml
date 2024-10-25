@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewData["Title"] = "FeedBack";
+    Layout = "~/Views/Share/_Layout.cshtml";
+}
+
+<h2>Đánh giá sản phẩm</h2>
+
+<div class="rating">
+    @for (int i = 1; i <= 5; i++)
+    {
+        <input type="radio" id="inputStar@(i)" name="rating" value="@i" style="display:none"/>
+        <i id="colorStar@(i)" class="fas fa-star" onclick="rateStar(@i)"></i>
+    }
+</div>
+<div id="textRating" style="margin-top:10px;">
+    <textarea id="userComment" style="width: 100%; height: 100px;" placeholder="Nhập nhận xét của bạn..."></textarea>
+</div>
+<div style="margin-top:10px;">
+    <button id="submitRating" >Gửi đánh giá</button>
+</div>
+
+<script>
+    function rateStar(star) {
+
+        // Đổi màu tất cả các ngôi sao trước ngôi sao được chọn và bao gồm chính nó
+        for (let i = 1; i <= star; i++) {
+            document.getElementById('colorStar' + i).classList.add('text-warning');
+        }
+
+        // Đổi tất cả các ngôi sao sau ngôi sao được chọn về màu gốc
+        for (let i = star + 1; i <= 5; i++) {
+            document.getElementById('colorStar' + i).classList.remove('text-warning');
+        }
+    }
+</script>
+
+
